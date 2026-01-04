@@ -125,7 +125,7 @@ Copyright © 2026 [wztxy](https://github.com/wztxy)
 
 ### 鯨語校園
 
-<img src="assets/whaleu-campus-qr.jpg" alt="鯨語校園微信小程式" width="200" />
+<img src="assets/whaleu-campus-qr.jpg" alt="鯨語校園 WeChat 小程式" width="200" />
 
 在校生開發和營運的校園論壇 / 樹洞
 
