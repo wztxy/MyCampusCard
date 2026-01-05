@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain, dialog, globalShortcut, shell } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, dialog, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { createCampusCardService } = require('./electron/services/campusCardService');
@@ -39,6 +39,19 @@ function createWindow() {
   mainWindow.loadFile(path.join(__dirname, 'dist', 'index.html'));
   createMenu();
 
+  mainWindow.webContents.on('before-input-event', (event, input) => {
+    if (input.type === 'keyDown') {
+      if (input.key === 'F12') {
+        mainWindow.webContents.toggleDevTools();
+        event.preventDefault();
+      }
+      if (input.key === 'i' && input.shift && (input.control || input.meta)) {
+        mainWindow.webContents.toggleDevTools();
+        event.preventDefault();
+      }
+    }
+  });
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -66,6 +79,18 @@ function createMenu() {
       label: 'File',
       submenu: [
         { role: 'quit' }
+      ]
+    },
+    {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { type: 'separator' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+        { role: 'selectAll' }
       ]
     },
     {
@@ -106,12 +131,6 @@ function createMenu() {
 }
 
 app.whenReady().then(() => {
-  globalShortcut.register('F12', () => {
-    if (mainWindow && !mainWindow.isDestroyed()) {
-      mainWindow.webContents.toggleDevTools();
-    }
-  });
-
   ipcMain.handle('save-image', async (event, { dataUrl, defaultName }) => {
     const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
       title: 'Save Report Image',
@@ -177,10 +196,6 @@ app.whenReady().then(() => {
 
   createWindow();
   Menu.setApplicationMenu(null);
-});
-
-app.on('will-quit', () => {
-  globalShortcut.unregisterAll();
 });
 
 app.on('window-all-closed', () => {
