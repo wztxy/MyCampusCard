@@ -45,7 +45,7 @@ Download the latest release from [GitHub Releases](https://github.com/wztxy/MyCa
 
 **Portable executable (.exe)**
 
-1. Download `MyCampusCard-x.y.z.exe` from the release assets
+1. Download `MyCampusCard-x.y.z-*-win.exe` from the release assets
 2. Double-click to run
 3. If Windows SmartScreen appears, click **More info** → **Run anyway**
 4. If flagged by antivirus software, restore from quarantine and add to trusted list
@@ -54,7 +54,7 @@ Download the latest release from [GitHub Releases](https://github.com/wztxy/MyCa
 
 **DMG or ZIP archive**
 
-1. Download the macOS asset (`MyCampusCard-x.y.z-*.dmg` or `MyCampusCard-x.y.z-mac.zip`)
+1. Download the macOS asset (`MyCampusCard-x.y.z-*-mac.dmg` or `MyCampusCard-x.y.z-*-mac.zip`)
 2. Drag `MyCampusCard.app` into `/Applications`
 3. Open `MyCampusCard`
 

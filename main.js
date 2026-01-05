@@ -5,6 +5,22 @@ const { createCampusCardService } = require('./electron/services/campusCardServi
 
 let mainWindow = null;
 
+function toggleDevToolsDocked() {
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+
+  const webContents = mainWindow.webContents;
+  if (webContents.isDevToolsOpened()) {
+    webContents.closeDevTools();
+    return;
+  }
+
+  if (process.platform === 'win32') {
+    webContents.openDevTools({ mode: 'right' });
+  } else {
+    webContents.openDevTools();
+  }
+}
+
 function sendToRenderer(channel, data) {
   if (mainWindow && !mainWindow.isDestroyed()) {
     mainWindow.webContents.send(channel, data);
@@ -42,11 +58,11 @@ function createWindow() {
   mainWindow.webContents.on('before-input-event', (event, input) => {
     if (input.type === 'keyDown') {
       if (input.key === 'F12') {
-        mainWindow.webContents.toggleDevTools();
+        toggleDevToolsDocked();
         event.preventDefault();
       }
       if (input.key === 'i' && input.shift && (input.control || input.meta)) {
-        mainWindow.webContents.toggleDevTools();
+        toggleDevToolsDocked();
         event.preventDefault();
       }
     }
@@ -98,7 +114,11 @@ function createMenu() {
       submenu: [
         { role: 'reload' },
         { role: 'forceReload' },
-        { role: 'toggleDevTools' },
+        {
+          label: 'Toggle Developer Tools',
+          accelerator: isMac ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+          click: () => toggleDevToolsDocked()
+        },
         { type: 'separator' },
         { role: 'resetZoom' },
         { role: 'zoomIn' },
@@ -195,7 +215,9 @@ app.whenReady().then(() => {
   });
 
   createWindow();
-  Menu.setApplicationMenu(null);
+  if (process.platform !== 'darwin') {
+    Menu.setApplicationMenu(null);
+  }
 });
 
 app.on('window-all-closed', () => {

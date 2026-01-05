@@ -2,7 +2,7 @@
   "name": "my-campus-card",
   "productName": "MyCampusCard",
   "author": "wztxy",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Campus card transaction analysis and report generator",
   "main": "main.js",
   "homepage": "./",
@@ -34,6 +34,7 @@
   "build": {
     "appId": "com.campuscard.analyzer",
     "productName": "MyCampusCard",
+    "artifactName": "${productName}-${version}-${arch}-${os}.${ext}",
     "compression": "maximum",
     "icon": "assets/icon.ico",
     "publish": null,

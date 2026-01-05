@@ -45,7 +45,7 @@
 
 **可攜式執行檔 (.exe)**
 
-1. 從 Release 資產中下載 `MyCampusCard-x.y.z.exe`
+1. 從 Release 資產中下載 `MyCampusCard-x.y.z-*-win.exe`
 2. 雙擊執行
 3. 若出現 Windows SmartScreen 提示，點擊 **更多資訊** → **仍要執行**
 4. 若防毒軟體誤報，請從隔離區還原並加入信任清單
@@ -54,7 +54,7 @@
 
 **DMG 或 ZIP 壓縮檔**
 
-1. 下載 macOS 資產（`MyCampusCard-x.y.z-*.dmg` 或 `MyCampusCard-x.y.z-mac.zip`）
+1. 下載 macOS 資產（`MyCampusCard-x.y.z-*-mac.dmg` 或 `MyCampusCard-x.y.z-*-mac.zip`）
 2. 將 `MyCampusCard.app` 拖入 `/Applications`
 3. 開啟 `MyCampusCard`
 
