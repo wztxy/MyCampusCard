@@ -3,7 +3,20 @@ const path = require('path');
 const fs = require('fs');
 const { createCampusCardService } = require('./electron/services/campusCardService');
 
+// Liquid Glass support (macOS 26+ only)
+let liquidGlass = null;
+const isMac = process.platform === 'darwin';
+if (isMac) {
+  try {
+    const liquidGlassModule = require('electron-liquid-glass');
+    liquidGlass = liquidGlassModule && liquidGlassModule.default ? liquidGlassModule.default : liquidGlassModule;
+  } catch (e) {
+    console.log('Liquid glass not available:', e.message);
+  }
+}
+
 let mainWindow = null;
+let glassViewId = null;
 
 function toggleDevToolsDocked() {
   if (!mainWindow || mainWindow.isDestroyed()) return;
@@ -32,25 +45,55 @@ const campusCardService = createCampusCardService({
 });
 
 function createWindow() {
-  mainWindow = new BrowserWindow({
+  const windowOptions = {
     width: 1400,
     height: 900,
     minWidth: 900,
     minHeight: 700,
     title: 'MyCampusCard',
     titleBarStyle: 'hidden',
-    titleBarOverlay: {
-      color: '#f5f5f7',
-      symbolColor: '#1d1d1f',
-      height: 32
-    },
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
       webSecurity: true
     }
-  });
+  };
+
+  // macOS with Liquid Glass support
+  if (isMac && liquidGlass) {
+    windowOptions.transparent = true;
+    // Do NOT enable vibrancy when using electron-liquid-glass.
+    // If set, it can override the native glass view and look blurry.
+    windowOptions.vibrancy = false;
+    windowOptions.backgroundColor = '#00000000';
+  } else {
+    windowOptions.titleBarOverlay = {
+      color: '#f5f5f7',
+      symbolColor: '#1d1d1f',
+      height: 32
+    };
+  }
+
+  mainWindow = new BrowserWindow(windowOptions);
+
+  // Apply Liquid Glass effect on macOS
+  if (isMac && liquidGlass) {
+    mainWindow.setWindowButtonVisibility(true);
+    mainWindow.webContents.once('did-finish-load', () => {
+      try {
+        glassViewId = liquidGlass.addView(
+          mainWindow.getNativeWindowHandle(),
+          {
+            cornerRadius: 12,
+            tintColor: '#20f5f5f7'
+          }
+        );
+      } catch (e) {
+        console.log('Failed to apply liquid glass:', e.message);
+      }
+    });
+  }
 
   mainWindow.loadFile(path.join(__dirname, 'dist', 'index.html'));
   createMenu();
@@ -69,6 +112,15 @@ function createWindow() {
   });
 
   mainWindow.on('closed', () => {
+    // Clean up liquid glass view
+    if (glassViewId && liquidGlass) {
+      try {
+        liquidGlass.removeView(glassViewId);
+      } catch (e) {
+        // Ignore cleanup errors
+      }
+      glassViewId = null;
+    }
     mainWindow = null;
   });
 }

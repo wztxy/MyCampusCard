@@ -2,7 +2,7 @@
   "name": "my-campus-card",
   "productName": "MyCampusCard",
   "author": "wztxy",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Campus card transaction analysis and report generator",
   "main": "main.js",
   "homepage": "./",
@@ -17,6 +17,7 @@
   "dependencies": {
     "axios": "^1.13.2",
     "chart.js": "^4.5.1",
+    "electron-liquid-glass": "^1.1.1",
     "html2canvas": "^1.4.1",
     "tough-cookie": "^6.0.0",
     "vue": "^3.5.26",

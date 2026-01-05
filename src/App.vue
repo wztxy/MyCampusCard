@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="main-container">
+  <div id="app" class="main-container" :class="{ 'mac-glass': isMacGlass }">
     <div class="title-bar">
       <div class="title-drag-region"></div>
       <div class="app-title">{{ t('app.title') }}</div>
@@ -54,6 +54,8 @@ const userInfo = ref({
   name: '',
   sessionId: ''
 });
+
+const isMacGlass = !!window.electronAPI && window.electronAPI.platform === 'darwin';
 
 const toggleLanguage = () => {
   locale.value = locale.value === 'zh-CN' ? 'en-US' : 'zh-CN';
@@ -115,12 +117,19 @@ onMounted(() => {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'PingFang SC', 
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'PingFang SC',
     'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f5f5f7;
+  background-color: transparent;
   color: #1d1d1f;
+}
+
+/* Fallback for non-transparent window */
+@supports not (backdrop-filter: blur(20px)) {
+  body {
+    background-color: #f5f5f7;
+  }
 }
 </style>
 
@@ -129,12 +138,16 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f5f5f7;
+  background-color: rgba(245, 245, 247, 0.85);
+}
+
+.main-container.mac-glass {
+  background-color: rgba(245, 245, 247, 0.35);
 }
 
 .title-bar {
   height: 32px;
-  background: #f5f5f7;
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -197,9 +210,9 @@ body {
 }
 
 .app-header {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
   color: #1d1d1f;
   padding: 12px 24px;
   display: flex;
