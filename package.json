@@ -17,11 +17,13 @@
   "dependencies": {
     "axios": "^1.13.2",
     "chart.js": "^4.5.1",
-    "electron-liquid-glass": "^1.1.1",
     "html2canvas": "^1.4.1",
     "tough-cookie": "^6.0.0",
     "vue": "^3.5.26",
     "vue-i18n": "^11.2.8"
+  },
+  "optionalDependencies": {
+    "electron-liquid-glass": "^1.1.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.3",
